@@ -1,0 +1,203 @@
+#+title: languages
+
+* TODO markup language
+** preface
+*** def
+text-encoding system to control display, enrich content or help auto prossing
+*** term
+evolved from the "marking up" of paper manuscripts
+*** kind
++ older: focus on typography and presentation, include Troff, TeX, and LaTeX
++ modern: identify components and apply processing
++ meta-language: SGML and XML allow designers to specify particular schemas
+*** type
+**** presentational markup: WYSIWYG (microsoft word?)
+**** procedual markup: troff,Tex,Markdown
+**** descriptive markup: LaTex, HTML, XML
+**** lightweight markup language: markdown, asciidoc, org-mode
+*** history
+**** GenCode
+**** Charles Goldfarb "father" of markup language GML
+**** Sir Tim Berners-Lee HTML
+*** fun stuff and tools
+**** pandoc:a universal document converter
+https://pandoc.org/
+*** hypertext
+ted nelson
+**** **** 上都计划 https://xanadu.com/
+**** 频道 https://www.youtube.com/channel/UCr_DXJ7ZUAJO_d8CnHYTDMQ
++ 任何媒体内容双向链接，可以在平行文本之间自由跳转，一直追溯到内容的源头
++ 拥有深度的版本管理，每次对文本的修改都以版本号记录下来，以便追溯变更历史
++ 版权授权机制，由于历史可追溯，所以内容理论上都可以追溯到原作者
++ 可视化的差异对比，不同版本的内容可以比较差异，基于原文的修改可以同步到引文
++ 创作者可以基于已有内容进行增量出版，类似滚动更新机制
++ 层级的目录结构是一种专制。创作者应该时刻与媒体内容保持联系，而不应该关心它保存在哪。
+** TODO languages [1/12]
++ [X] markdown
+  + https://sspai.com/post/36608
+  A Markdown-formatted document should be publishable as-is, as plain text, without looking like it’s been marked up with tags or formatting instructions. — John Gruber
++ [ ] html
++ [ ] haml
++ [ ] toml
++ [ ] yaml
++ [ ] Dhall
+  - Dhall ~= JSON + functions + types + import
+  - isprogrammable but not Turing-complete
++ [ ] restructured text (RST)
++ [ ] json
+  - Although the developer of JSON declared in 2006 that JSON is not a markup language, it is now often treated as such.
++ [ ] Jsonnet
+  - Jsonnet is a powerful templating language for JSON. Any valid JSON document is a valid Jsonnet object.
++ [ ] Hjson
++ [ ] css
+  - CSS (Cascading Style Sheets) is a separate language which specifies a page’s appearance.
+  - CSS code is made of static rules.
++ [ ] less
+  - Less is a CSS pre-processor, that adds features such as variables, nesting, mixins and more. Less (and other preprocessors, such as Sass) help developers to write maintainable and DRY (Don’t Repeat Yourself) code.
+* TODO fuctional language
+** preface
+*** haskell curry!
+*** history of glasgow stuff(ghc what about gcc(coincidence?))
+** languages
++ [ ] Standard ML
++ [X] Haskell
++ [ ] erlang
++ [ ] clojure
++ [ ] Camel
++ [ ] Common Lisp
++ [ ] elisp
++ [ ] clojure macros
++ [ ] lisp flavoured Erlang
++ [ ] Elm
+  - functional reactive
+  - compiles to (client-side) JavaScript
+  - statically typed
+  - great for designing user interfaces and games for the web.
+* TODO object oriented language
+** preface
+** languages
++ [ ] Java
++ [ ] Smalltalk
++ [ ] Javascript
+* TODO low level language
+** preface
+** languages [0/3]
++ [ ] [[~/myorgs/C.org][C]]
++ [ ] C++
++ [ ] Rust
+* TODO scientific language
+** preface
+** languages [0/5]
++ [ ] python
+  - pandas
+  - numpy
+  - matplotlib
++ [ ] SQL
++ [ ] R
++ [ ] Matlab
++ [ ] AMPL
+* TODO hybrid language
+** preface
+** languages [/]
++ [ ] Scala
+* TODO mobile language
+** preface
+** languages [0/2]
++ [ ] swift
++ [ ] dart
+* TODO meme language
+** preface
+** languages [/]
++ [ ] bk
++ [ ] holy c
+* TODO general thoeries
+** [[https://www.welton.it/articles/programming_language_economics.html][The Economics of Programming Languages]]
+*** language as products
++ prod cost -> 0
++ dev cost ->
++ not only ends to do stuff but also means to communicate
+*** positive network externalities
++ more user more value
+*** switching cost
++ banks still Cobal
++ for individual user
+  + hard to 'keep shape'
+  + path dependent
+*** intro new lang is hard
++ standards
+  - easier to write
+  - more efficient
+  - higher quality
+    - garbage collection etc
+  - more productive
+    - python/mojo
++ gains must be significant
+*** compatibility
++ C++ good
++ lisp all the way down not so good
++ Java not very but have true improvements than C/C++
+*** lang for niche
++ Fortran for scientific
++ Erlang for strict task
++ scripting langs (js,php) for web
+*** TODO further reading
++ John R. Mashey's "Languages, Levels, Libraries, and Longevity"
++ Information Rules: A Strategic Guide to the Network Economy by Carl Shapiro
+** two towers
+[[https://www.youtube.com/watch?v=ruOnPmI_40g]]
++ minimum subset of rules necessary
+  + axioms are self evident rules
+  + theorems are derived ruls
++ Peano Axioms
+  - 1 is syntactic suger for S(0)
+  - peano towers
++ axiomatic defination of computing
+  - Alan Turing 1936 Turing machines
+  - Alonzo Church 1936 lambda calculus
+  - Kurt Godel 1933 general recurisve fuctions
++ Turing Machines
+  - brainfuck!!!
+  - an algorithm is "computable" if and only if it can be encoded as a Turing machine
+    - tape is internal state
+    - you need an infinite tape and a program
++ Turing Completeness
+  - is Turing complete if and only if can emulate Turing machine
+  - Game of life is Turing Complete!!!
+  - Magic the Gathering(wanzhipai)
+  - powerpoint
++ Lambda Calculus
+  - variable defination x
+  - fuction defination (y) => M
+  - fuction application f(M)
+  - currying λxy.M === λx.(λy.M)
+  - boolean
+    - T:= λxy.x
+    - F:= λxy.y
+    - AND:= λxy.xyF
+  - The Y Combinator
+    - Y:= λy.(λx.y(xx))(λx.y(xx))
+    - Y R := R(Y R)
+    - Create recursion from nothing!!!!
+  - Church-Turing Thesis
+    - equivalent!!!
+  - Peculiarities of Lambda Calculus
+    - no global state!
+    - all functions are pure
+    - all values are immutable
+    - no loops
+    - functions are unit of composition
+  - Turing machine Tower(easier implementable in machines, easier compiler(reduce to axioms!))
+    - Turing Machines(1936)
+    - Von Neumann Model(1945) -- more easy circuits
+    - Assembly(1949) -- human readable
+    - FORTRAN(1957) -- if, loops
+    - C(1972) -- functions,structs,malloc
+    - C++(1985) -- classes,objects
+  - Lambda Calculus Tower (hard to imp in hardware)
+    - Lambda Calculus(1936)
+    - LISP(1958) -- Meta-circular,GC (lisp implemented in lisp????)
+    - System F(1972) -- λ-calculus with types
+    - ML/OCaml(1973) -- Pattern matching
+    - Haskell(1985) -- Pure
+    - Elm(2012) -- Flux/redux pattern ??
+    - React(2013) -- View is pure fuction of state

@@ -1,0 +1,76 @@
+#+title: Lambda
+
+* Preface
++ Alonzo Church, is the
++ world’s smallest programming language
+
+* Elements
+| variable     | x                | x       |
+| function     | λ<param><body>   | λx.x    |
+| application  | <func><var/func> | (λx.x)a |
+
+* Free vs. Bound Variables
++ λx.x | x - bound variable
++ λx.y | y - free variable
+
+* Evaluation
++ β-Reduction, which is essentially lexically-scoped substitution.
++ (λx.x)a, replace all occurrences of “x” in the function’s body with “a”.
+  - (λx.x)a evaluates to: a
+  - (λx.y)a evaluates to: y
++ higher-order functions:
+  - (λx.(λy.x))a => λy.a
++ currying
+  - (λx.λy.λz.xyz) is equivalent to f(x, y, z) = ((x y) z)
+  - λxy.<body> => λx.λy.<body>
++ traditional lambda calculus doesn’t have numbers, characters, or any non-function datatype!
+
+* Boolean Logic
++ T is represented by: λx.λy.x
++ F is represented by: λx.λy.y
++ IF is equivalent to: λb.λt.λf.b t f
++ a AND b is equivalent to: λab.IF a b F
++ a OR b is equivalent to: λab.IF a T b+
++ NOT a is equivalent to: λa.IF a F T
++ Note: IF a b c is essentially saying: IF((a b) c)
+
+* Church numerals.
++ For any number n: n = λf.fn so:0 = λf.λx.x
++ 1 = λf.λx.f x
++ 2 = λf.λx.f(f x)
++ 3 = λf.λx.f(f(f x))
++ successor function S(n) = n + 1
+  - S = λn.λf.λx.f((n f) x)
++ ADD = λab.(a S)b
++ Challenge: try defining your own multiplication function!
+
+Get even smaller: SKI, SK and Iota
+
+* SKI Combinator Calculus
+Let S, K, I be the following functions:
+I x = x
+K x y = x
+S x y z = x z (y z)
+We can convert an expression in the lambda calculus to an expression in the SKI combinator calculus:
+Take the church number 2 for example:
+2 = λf.λx.f(f x)
+2
+= S (λf.(S (K f))) (λf.(S (K f) I))
+= S (S (K S) (S (K K) I)) (S (S (K S) (S (K K) I)) (K I))
+
+* SK Combinator Calculus
+The SKI combinator calculus can still be reduced further. We can remove the I combinator by noting that I = SKK. We can substitute all I’s with SKK.
+
+* Iota Combinator
+ι = λf.((f S) K)
+We have:
+I = ιι
+K = ι(ιI) = ι(ι(ιι))
+S = ι(K) = ι(ι(ι(ιι)))
+
+* Apendix
+A Tutorial Introduction to the Lambda Calculus
+Cornell CS 312 Recitation 26: The Lambda Calculus
+Wikipedia - Lambda Calculus
+Wikipedia - SKI combinator calculus
+Wikipedia - Iota and Jot

@@ -1,0 +1,539 @@
+#+title: Haskell
+* TABLE OF CONTENTS :toc:
+- [[#comments][Comments]]
+- [[#primitive-datatypes-and-operators][Primitive Datatypes and Operators]]
+- [[#lists-and-tuples][Lists and Tuples]]
+- [[#functions][Functions]]
+  - [[#function-application][function application]]
+  - [[#guards][guards]]
+  - [[#pattern-matching][pattern matching]]
+  - [[#anonymous-functions][anonymous functions]]
+  - [[#partial-application][partial application]]
+  - [[#function-composition][function composition]]
+  - [[#fixing-precedence][fixing precedence]]
+- [[#type-signatures][Type signatures]]
+- [[#type-parameters][Type parameters]]
+- [[#control-flow-and-if-expressions][Control Flow and If Expressions]]
+- [[#data-types][Data Types]]
+- [[#typeclasses][Typeclasses]]
+- [[#haskell-io][Haskell IO]]
+- [[#the-haskell-repl][The Haskell REPL]]
+- [[#functor-applicative-monad][Functor, Applicative, Monad]]
+  - [[#type-constructors-maybe-][Type Constructors: Maybe, []..]]
+  - [[#kind-first-ordedsecond-orded][kind (first-orded,second orded?)]]
+  - [[#functor][functor]]
+  - [[#functor-law][functor law]]
+  - [[#applicative][applicative]]
+  - [[#applicative-law][applicative law]]
+  - [[#monad][monad]]
+- [[#install][Install]]
+- [[#resource][Resource]]
+
+* Comments
+#+BEGIN_SRC haskell
+-- Single line comments start with two dashes.
+{- Multiline comments can be enclosed
+in a block like this.
+-}
+#+END_SRC
+* Primitive Datatypes and Operators
+ + no need parentheses for function calls+
+ + general pattern: func arg1 arg2 arg3...
+#+begin_src haskell
+-- numbers
+3 -- 3
+-- Boolean operations
+not True -- False
+not False -- True
+True && False -- False
+True || False -- True
+1 == 1 -- True
+1 /= 1 -- False
+1 < 10 -- True
+-- Strings and characters
+"This is a string."
+'a' -- character
+'You cant use single quotes for strings.' -- error!
+-- concatenate
+"Hello " ++ "world!" -- "Hello world!"
+-- A string is a list of characters
+['H', 'e', 'l', 'l', 'o'] -- "Hello"
+-- index
+"This is a string" !! 0 -- 'T'
+#+end_src
+* Lists and Tuples
+#+begin_src haskell
+-- Every element in a list must have the same type.
+-- These two lists are equal:
+[1, 2, 3, 4, 5]
+[1..5]
+-- Ranges are versatile.
+['A'..'F'] -- "ABCDEF"
+-- You can create a step in a range.
+[0,2..10] -- [0, 2, 4, 6, 8, 10]
+[5..1] -- [] (Haskell defaults to incrementing)
+[5,4..1] -- [5, 4, 3, 2, 1]
+-- indexing into a list
+[1..10] !! 3 -- 4 (zero-based indexing)
+-- You can also have infinite lists in Haskell!
+[1..] -- a list of all the natural numbers
+-- infinate list
+[1..] !! 999 -- 1000
+-- joining two lists
+[1..5] ++ [6..10]
+-- adding to the head of a list
+0:[1..5] -- [0, 1, 2, 3, 4, 5]
+-- more list operations
+head [1..5] -- 1
+tail [1..5] -- [2, 3, 4, 5]
+init [1..5] -- [1, 2, 3, 4]
+last [1..5] -- 5
+-- list comprehensions
+[x*2 | x <- [1..5]] -- [2, 4, 6, 8, 10]
+-- with a conditional
+[x*2 | x <- [1..5], x*2 > 4] -- [6, 8, 10]
+-- element in a tuple can be a different type, but a tuple has a fixed length.
+-- A tuple:
+("haskell", 1)
+-- accessing elements of a pair (i.e. a tuple of length 2)
+fst ("haskell", 1) -- "haskell"
+snd ("haskell", 1) -- 1
+-- pair element accessing does not work on n-tuples (i.e. triple, quadruple, etc)
+snd ("snd", "can't touch this", "da na na na") -- error! see function below
+#+END_SRC
+* Functions
+** function application
+#+begin_src haskell
+add a b = a + b
+1 `add` 2 -- 3
+-- define your own operators
+(//) a b = a `div` b
+35 // 4 -- 8
+#+end_src
+** guards
+do branching in functions
+#+begin_src haskell
+fib x
+  | x < 2 = 1
+  | otherwise = fib (x - 1) + fib (x - 2)
+#+end_src
+** pattern matching
+must list all cases | edge cases
+#+begin_src haskell
+fib 1 = 1
+fib 2 = 2
+fib x = fib (x - 1) + fib (x - 2)
+myMap func [] = []
+myMap func (x:xs) = func x:(myMap func xs)
+#+end_src
+** anonymous functions
+#+begin_src haskell
+myMap (\x -> x + 2) [1..5] -- [3, 4, 5, 6, 7]
+
+foldl1 (\acc x -> acc + x) [1..5] -- 15
+#+end_src
+** partial application
+#+begin_src haskell
+add a b = a + b
+foo = add 10
+foo 5
+
+-- Another way
+foo = (10+)
+foo 5 -- 15
+#+end_src
+** function composition
+the operator `.` chains functions together.
+For example, here foo is a function that takes a value. It adds 10 to it,
+multiplies the result of that by 4, and then returns the final value.
+#+begin_src haskell
+foo = (4*) . (10+)
+foo 5 -- 60
+#+end_src
+** fixing precedence
++ In contrast to standard function application
+  + highest possible priority of 10
+  + left-associative
++ `$` operator
+  + priority of 0
+  + right-associative
+#+begin_src haskell
+-- before
+even (fib 7) -- false
+
+-- equivalently
+even $ fib 7 -- false
+
+-- composing functions
+even . fib $ 7 -- false
+#+end_src
+* Type signatures
+#+BEGIN_SRC haskell
+-- Some basic types:
+5 :: Integer
+"hello" :: String
+True :: Bool
+
+double :: Integer -> Integer
+double x = x * 2
+#+END_SRC
+* Type parameters
+[a]
+* Control Flow and If Expressions
+#+begin_src haskell
+-- if-expressions
+haskell = if 1 == 1 then "awesome" else "awful" -- haskell = "awesome"
+
+-- if-expressions can be on multiple lines too, indentation is important
+haskell = if 1 == 1
+            then "awesome"
+            else "awful"
+
+-- case expressions: Here's how you could parse command line arguments
+case args of
+  "help" -> printHelp
+  "start" -> startProgram
+  _ -> putStrLn "bad args"
+
+-- Haskell doesn't have loops; it uses recursion instead.
+-- map applies a function over every element in a list
+map (*2) [1..5] -- [2, 4, 6, 8, 10]
+
+-- you can make a for function using map
+for array func = map func array
+
+-- and then use it
+for [0..5] $ \i -> show i
+
+-- we could've written that like this too:
+for [0..5] show
+
+-- You can use foldl or foldr to reduce a list
+-- foldl <fn> <initial value> <list>
+foldl (\x y -> 2*x + y) 4 [1,2,3] -- 43
+
+-- This is the same as
+(2 * (2 * (2 * 4 + 1) + 2) + 3)
+
+-- foldl is left-handed, foldr is right-handed
+foldr (\x y -> 2*x + y) 4 [1,2,3] -- 16
+
+-- This is now the same as
+(2 * 1 + (2 * 2 + (2 * 3 + 4)))
+#+end_src
+
+* Data Types
+A data type is declared with a 'type constructor' on the left and one or more 'data constructors' on the right, separated by
+the pipe | symbol. This is a sum/union type. Each data constructor is a (possibly nullary) function that creates an object of the type
+named by the type constructor.
+#+begin_src haskell
+-- essentially an enum
+data Color = Red | Blue | Green
+
+-- Now you can use it in a function:
+say :: Color -> String
+say Red   = "You are Red!"
+say Blue  = "You are Blue!"
+say Green = "You are Green!"
+
+data Point = Point Float Float
+
+distance :: Point -> Point -> Float
+distance (Point x y) (Point x' y') = sqrt $ dx + dy
+    where dx = (x - x') ** 2
+          dy = (y - y') ** 2
+-- multiple data constructors with arguments
+data Name = Mononym String
+          | FirstLastName String String
+          | FullName String String String
+-- To make things clearer we can use record syntax
+data Point2D = CartesianPoint2D { x :: Float, y :: Float }
+             | PolarPoint2D { r :: Float, theta :: Float }
+
+myPoint = CartesianPoint2D { x = 7.0, y = 10.0 }
+-- Using record syntax automatically creates accessor functions
+-- (the name of the field)
+xOfMyPoint = x myPoint
+-- xOfMyPoint is equal to 7.0
+-- Record syntax also allows a simple form of update
+myPoint' = myPoint { x = 9.0 }
+-- myPoint' is CartesianPoint2D { x = 9.0, y = 10.0 }
+-- Even if a type is defined with record syntax, it can be declared like
+-- a simple data constructor. This is fine:
+myPoint'2 = CartesianPoint2D 3.3 4.0
+-- It's also useful to pattern match data constructors in `case` expressions
+distanceFromOrigin x =
+    case x of (CartesianPoint2D x y) -> sqrt $ x ** 2 + y ** 2
+              (PolarPoint2D r _) -> r
+-- have type parameters
+data Maybe a = Nothing | Just a
+-- These are all of type Maybe
+Just "hello"    -- of type `Maybe String`
+Just 1          -- of type `Maybe Int`
+Nothing         -- of type `Maybe a` for any `a`
+
+-- For convenience we can also create type synonyms with the 'type' keyword
+
+type String = [Char]
+
+-- Unlike `data` types, type synonyms need no constructor, and can be used
+-- anywhere a synonymous data type could be used. Say we have the
+-- following type synonyms and items with the following type signatures
+
+type Weight = Float
+type Height = Float
+type Point = (Float, Float)
+getMyHeightAndWeight :: Person -> (Height, Weight)
+findCenter :: Circle -> Point
+somePerson :: Person
+someCircle :: Circle
+distance :: Point -> Point -> Float
+
+-- The following would compile and run without issue,
+-- even though it does not make sense semantically,
+-- because the type synonyms reduce to the same base types
+
+distance (getMyHeightAndWeight somePerson) (findCenter someCircle)
+#+end_src
+
+* Typeclasses
+
+Typeclasses are one way Haskell does polymorphism They are similar to interfaces in other languages
+A typeclass defines a set of functions that must work on any type that is in that typeclass.
+
+The Eq typeclass is for types whose instances can be tested for equality with one another.
+#+begin_src haskell
+class Eq a where
+    (==) :: a -> a -> Bool
+    (/=) :: a -> a -> Bool
+    x == y = not (x /= y)
+    x /= y = not (x == y)
+
+This defines a typeclass that requires two functions, (==) and (/=)
+It also declares that one function can be declared in terms of another
+So it is enough that *either* the (==) function or the (/=) is defined
+And the other will be 'filled in' based on the typeclass definition
+
+To make a type a member of a type class, the instance keyword is used
+
+instance Eq TrafficLight where
+    Red == Red = True
+    Green == Green = True
+    Yellow == Yellow = True
+    _ == _ = False
+
+--Now we can use (==) and (/=) with TrafficLight objects
+
+ProceedThrough :: TrafficLight -> Bool
+ProceedThrough t = t /= Red
+
+You can NOT create an instance definition for a type synonym
+
+Functions can be written to take typeclasses with type parameters,
+rather than types, assuming that the function only relies on
+features of the typeclass
+
+isEqual (Eq a) => a -> a -> Bool
+isEqual x y = x == y
+#+end_src
+
+Note that x and y MUST be the same type, as they are both defined
+as being of type parameter 'a'.
+A typeclass does not state that different types in the typeclass can
+be mixed together.
+So `isEqual Red 2` is invalid, even though 2 is an Int which is an
+instance of Eq, and Red is a TrafficLight which is also an instance of Eq
+
+Other common typeclasses are:
+Ord for types that can be ordered, allowing you to use >, <=, etc.
+Read for types that can be created from a string representation
+Show for types that can be converted to a string for display
+Num, Real, Integral, Fractional for types that can do math
+Enum for types that can be stepped through
+Bounded for types with a maximum and minimum
+
+Haskell can automatically make types part of Eq, Ord, Read, Show, Enum,
+and Bounded with the `deriving` keyword at the end of the type declaration
+
+data Point = Point Float Float deriving (Eq, Read, Show)
+
+In this case it is NOT necessary to create an 'instance' definition
+
+* Haskell IO
+When a Haskell program is executed, `main` is
+called. It must return a value of type `IO a` for some type `a`. For example:
+
+#+begin_src haskell
+main :: IO ()
+main = putStrLn $ "Hello, sky! " ++ (say Blue)
+--putStrLn has type String -> IO ()
+#+end_src
+
+#+RESULTS:
+
+It is easiest to do IO if you can implement your program as
+a function from String to String. The function
+   interact :: (String -> String) -> IO ()
+inputs some text, runs a function on it, and prints out the
+output.
+#+begin_src haskell
+countLines :: String -> String
+countLines = show . length . lines
+main' = interact countLines
+#+end_src
+You can think of a value of type `IO ()` as representing a
+sequence of actions for the computer to do, much like a
+computer program written in an imperative language. We can use
+the `do` notation to chain actions together. For example:
+
+#+begin_src haskell
+sayHello :: IO ()
+sayHello = do
+   putStrLn "What is your name?"
+   name <- getLine -- this gets a line and gives it the name "name"
+   putStrLn $ "Hello, " ++ name
+#+end_src
+The code in `sayHello` will never be executed, however. The only
+action that ever gets executed is the value of `main`.
+To run `sayHello` comment out the above definition of `main`
+and replace it with:
+  main = sayHello
+
+Let's understand better how the function `getLine` we just
+used works. Its type is:
+   getLine :: IO String
+You can think of a value of type `IO a` as representing a
+computer program that will generate a value of type `a`
+when executed (in addition to anything else it does). We can
+name and reuse this value using `<-`. We can also
+make our own action of type `IO String`:
+
+#+begin_src haskell
+action :: IO String
+action = do
+   putStrLn "This is a line. Duh"
+   input1 <- getLine
+   input2 <- getLine
+   -- The type of the `do` statement is that of its last line.
+   -- `return` is not a keyword, but merely a function
+   return (input1 ++ "\n" ++ input2) -- return :: String -> IO String
+#+end_src
+
+We can use this just like we used `getLine`:
+
+#+begin_src haskell
+main'' = do
+    putStrLn "I will echo two lines!"
+    result <- action
+    putStrLn result
+    putStrLn "This was all, folks!"
+#+end_src
+
+The type `IO` is an example of a "monad". The way Haskell uses a monad to
+do IO allows it to be a purely functional language. Any function that
+interacts with the outside world (i.e. does IO) gets marked as `IO` in its
+type signature. This lets us reason about which functions are "pure" (don't
+interact with the outside world or modify state) and which functions aren't.
+
+This is a powerful feature, because it's easy to run pure functions
+concurrently; so, concurrency in Haskell is very easy.
+
+* The Haskell REPL
++ let foo = 5
++ :t = for type
++ :i = additional information
++ :kind = for kind
++ You can also run any action of type `IO ()`
+* Functor, Applicative, Monad
+** Type Constructors: Maybe, []..
+** kind (first-orded,second orded?)
+#+begin_src haskell
+Prelude> :kind Int
+Int :: *
+Prelude> :kind []
+[] :: * -> *
+Prelude> :kind Maybe
+Maybe :: * -> *
+Prelude> :kind (,)
+(,) :: * -> * -> *
+Prelude> :kind (->)
+(->) :: * -> * -> *
+Prelude> :kind IO
+IO :: * -> *
+#+end_src
+** functor
++ fmap :: Functor f => (a -> b) -> f a -> f b
++ map :: (a -> b) -> [a] -> [b]
+Prelude>
+#+begin_src haskell
+class Functor (f :: * -> *) where
+  fmap :: (a -> b) -> f a -> f b
+  (<$) :: a -> f b -> f a
+  {-# MINIMAL fmap #-}
+        -- Defined in ‘GHC.Base’
+instance Functor (Either a) -- Defined in ‘Data.Either’
+instance Functor [] -- Defined in ‘GHC.Base’
+instance Functor Maybe -- Defined in ‘GHC.Base’
+instance Functor IO -- Defined in ‘GHC.Base’
+instance Functor ((->) r) -- Defined in ‘GHC.Base’
+instance Functor ((,) a) -- Defined in ‘GHC.Base’
+
+-- yoooooo!
+instance Functor [] where
+  fmap = map
+#+end_src
++ g <$> x = fmap g x
+** functor law
+1. fmap id = id
+2. fmap (f . g) = fmap f . fmap g
+** applicative
+#+begin_src haskell
+class Functor f => Applicative (f :: * -> *) where
+  pure :: a -> f a
+  (<*>) :: f (a -> b) -> f a -> f b
+  GHC.Base.liftA2 :: (a -> b -> c) -> f a -> f b -> f c
+  (*>) :: f a -> f b -> f b
+  (<*) :: f a -> f b -> f a
+  {-# MINIMAL pure, ((<*>) | liftA2) #-}
+        -- Defined in ‘GHC.Base’
+instance Applicative (Either e) -- Defined in ‘Data.Either’
+instance Applicative [] -- Defined in ‘GHC.Base’
+instance Applicative Maybe -- Defined in ‘GHC.Base’
+instance Applicative IO -- Defined in ‘GHC.Base’
+instance Applicative ((->) a) -- Defined in ‘GHC.Base’
+instance Monoid a => Applicative ((,) a) -- Defined in ‘GHC.Base’
+Prelude>
+#+end_src
+** applicative law
+** monad
+#+begin_src haskell
+class Applicative m => Monad (m :: * -> *) where
+  (>>=) :: m a -> (a -> m b) -> m b
+  (>>) :: m a -> m b -> m b
+  return :: a -> m a
+  {-# MINIMAL (>>=) #-}
+        -- Defined in ‘GHC.Base’
+instance Monad (Either e) -- Defined in ‘Data.Either’
+instance Monad [] -- Defined in ‘GHC.Base’
+instance Monad Maybe -- Defined in ‘GHC.Base’
+instance Monad IO -- Defined in ‘GHC.Base’
+instance Monad ((->) r) -- Defined in ‘GHC.Base’
+instance Monoid a => Monad ((,) a) -- Defined in ‘GHC.Base’
+Prelude>
+-- orginal
+m1 >>= \k -> m2
+-- syntatic sugar
+do
+  k <- m1
+  m2
+#+end_src
+* Install
+| traditional | Cabal |
+| newer       | Stack |
+* Resource
+Happy Learn Haskell Tutorial
+Real World Haskell.
+
+#+begin_src haskell
+
+#+end_src
