@@ -156,7 +156,6 @@ Why should we separate the rendering code from the code that actually prints a v
 The special value undefined will happily typecheck no matter where we use it, as will an expression like error "argh!". It is especially important that we write type signatures when we use these.
 ** A more general look at rendering
 Libraries that perform this job are referred to as pretty printers. 
-*** Naming
 In our Prettify module, we will base our names on those used by several established Haskell pretty printing libraries. This will give us a degree of compatibility with existing mature libraries.
 
 To make sure that Prettify meets practical needs, we write a new JSON renderer that uses the Prettify API. After we're done, we'll go back and fill in the details of the Prettify module.
@@ -172,6 +171,7 @@ renderJValue (JBool False) = text "false"
 renderJValue JNull         = text "null"
 renderJValue (JNumber num) = double num
 renderJValue (JString str) = string str
+renderJValue (JArray ary) = series '[' ']' renderJValue ary
 #+end_src
 
 ** Developing Haskell code without going nuts
@@ -206,10 +206,6 @@ enclose left right x = char left <> x <> char right
 + Point-free style
   + The use of the word “point” is not related to the “.” character used for function composition. The term point is roughly synonymous (in Haskell) with value, so a point-free expression makes no mention of the values that it operates on.
 + “pointy” version
-#+begin_comment
-pointyString :: String -> Doc
-pointyString s = enclose '"' '"' (hcat (map oneChar s))3 comments
-#+end_comment
 + The enclose function simply wraps a Doc value with an opening and closing character.
 #+begin_src haskell :tangle ch05/PrettyStub.hs
 (<>) :: Doc -> Doc -> Doc
@@ -283,44 +279,44 @@ ghci> 7 .&. 2   :: Int
 ** Arrays and objects, and the module header
 Compared to strings, pretty printing arrays and objects is a snap. We already know that the two are visually similar: each starts with an opening character, followed by a series of values separated with commas, followed by a closing character. Let's write a function that captures the common structure of arrays and objects.
 
--- file: ch05/PrettyJSON.hs
+#+begin_src haskell :tangle ch05/PrettyJSON.hs
 series :: Char -> Char -> (a -> Doc) -> [a] -> Doc
 series open close item = enclose open close
                        . fsep . punctuate (char ',') . map item
-6 comments
+#+end_src
+
 We'll start by interpreting this function's type. It takes an opening and closing character, then a function that knows how to pretty print a value of some unknown type a, followed by a list of values of type a, and it returns a value of type Doc.
 
 Notice that although our type signature mentions four parameters, we have only listed three in the definition of the function. We are simply following the same rule that lets us simplify a definiton like myLength xs = length xs to myLength = length.
 
 We have already written enclose, which wraps a Doc value in opening and closing characters. The fsep function will live in our Prettify module. It combines a list of Doc values into one, possibly wrapping lines if the output will not fit on a single line.
 
--- file: ch05/PrettyStub.hs
+#+begin_src haskell :tangle ch05/PrettyStub.hs
 fsep :: [Doc] -> Doc
 fsep xs = undefined
-3 comments
+#+end_src
+
 By now, you should be able to define your own stubs in Prettify.hs, by following the examples we have supplied. We will not explicitly define any more stubs.
 
 The punctuate function will also live in our Prettify module, and we can define it in terms of functions for which we've already written stubs.
 
--- file: ch05/Prettify.hs
+#+begin_src haskell :tangle ch05/Prettify.hs
 punctuate :: Doc -> [Doc] -> [Doc]
 punctuate p []     = []
 punctuate p [d]    = [d]
 punctuate p (d:ds) = (d <> p) : punctuate p ds
+#+end_src
 
-With this definition of series, pretty printing an array is entirely straightforward. We add this equation to the end of the block we've already written for our renderJValue function.
 
--- file: ch05/PrettyJSON.hs
-renderJValue (JArray ary) = series '[' ']' renderJValue ary
-2 comments
 To pretty print an object, we need to do only a little more work: for each element, we have both a name and a value to deal with.
 
--- file: ch05/PrettyJSON.hs
+#+begin_src haskell :tangle ch05/PrettyJSON.hs
 renderJValue (JObject obj) = series '{' '}' field obj
     where field (name,val) = string name
                           <> text ": "
                           <> renderJValue val
-Writing a module header
+#+end_src
+** Writing a module header
 Now that we have written the bulk of our PrettyJSON.hs file, we must go back to the top and add a module declaration.
 
 -- file: ch05/PrettyJSON.hs

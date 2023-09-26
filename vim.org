@@ -1,0 +1,25 @@
+* 7 Habbits For Effective Text Editing 2.0
+** 3 Basic Steps
+      1. Detect Inefficiency
+      2. Find a quicker way
+      3. Make it a habbit
+	+ code folding! 
+		+ zf{motion} za
+	+ search
+		+ :set hlsearh
+		+ :noh
+		+ <*>
+	+ complete
+		+ C-n C-p
+		+ C-x C-n/p
+	+ gf goto file
+		+ haskell.org
+
+
+
+
+
+
+
+
+

@@ -1,5 +1,20 @@
 #+title: Git
-
+* technical
+** data types
+*** object
+**** blob -> change
+***** represents contents without metadata
+**** commit -> immutable
+***** snap shot of the project
+***** commit ids are SHA1 hashes
+***** branch muatable -> to name commits
+**** tree -> dir
+***** represents a directory
+** history manipluation
+*** merge -> three way(commit) merge
+**** make histroy unclear . two parents
+*** rebase -> cherry picking
+***** make histroy ~linear
 * 前言
 Git 是一个分布式版本控制及源代码管理工具
 
