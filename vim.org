@@ -13,7 +13,7 @@
 		+ C-n C-p
 		+ C-x C-n/p
 	+ gf goto file
-		+ haskell.org
+		+ git.org
 
 
 
