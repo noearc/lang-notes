@@ -1,0 +1,6 @@
+#+title: learning notes on languages
+
+this is my notes on learning programming languages
+had a wild thought about learning 10+ languages in mid September, 2023
+while I only know a little about js, python and haskell
+let us see where this road leads me
