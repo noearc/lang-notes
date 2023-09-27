@@ -1,5 +1,5 @@
 * 7 Habbits For Effective Text Editing 2.0
-** 3 Basic Steps
+** 3 Basic Steps;
       1. Detect Inefficiency
       2. Find a quicker way
       3. Make it a habbit
@@ -14,12 +14,23 @@
 		+ C-x C-n/p
 	+ gf goto file
 		+ git.org
-
-
-
-
-
-
-
+	+ q: / q/ / q? 
+		+ serach history!!!
+	+ Q: Ex mode
+		+ complex or repetitive tasks on multiple files or lines of text.
+		+ non-interactive way
+		+ Your connection is very slow or screen is not updated after your actions.
+		+ Mappings and abbreviations are disabled.
+		+ Common keys such as Escape or Control doesn't work properly.
+	+ command mode;
+		+ select to make change on blocks
+		+ :p print
+		+ :t copy *t*o
+		+ :m move to
+		+ | . identity | 1 | $ last | 0 above document | % whole doc | 'm marked line |
+		+ .+5 orgin plus 5 address
+		+ @: to repeat last command
+		+ . does not apply but goooood
+			+ :$normal .  !!!
 
 
