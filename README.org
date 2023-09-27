@@ -1,6 +1,28 @@
 #+title: learning notes on languages
-
-this is my notes on learning programming languages
-had a wild thought about learning 10+ languages in mid September, 2023
-while I only know a little about js, python and haskell
-let us see where this road leads me
+* preface
+this is my notes on learning programming languages.
+I had a wild thought about learning 10+ languages in mid September, 2023,
+while I only know a little about js, python and haskell.
+let us see where this road leads me.
+* roadmap
+** markup languages
++ [ ] org mode
++ [ ] html
++ [ ] json
++ [ ] markdown
++ [ ] asciidoc
+** functional languages
++ [ ] haskell
++ [ ] lisp family
++ [ ] ml family
++ [ ] elm
+** low level languages
++ [ ] rust
++ [ ] c/cpp
+** scientific languages
++ [ ] python
++ [ ] julia
++ [ ] r
++ [ ] sql
+** mobile languages
+** meme languages
